@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: fridgemagic-api
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: CLIENT_ORIGIN
+        value: https://fridgemagic-client.onrender.com
+
+  - type: web
+    name: fridgemagic-client
+    runtime: static
+    rootDir: client
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_HOST
+        fromService:
+          type: web
+          name: fridgemagic-api
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
