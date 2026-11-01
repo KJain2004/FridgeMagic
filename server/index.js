@@ -9,7 +9,7 @@ const chefRoutes = require('./routes/chef');
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['http://localhost:5173', 'https://fridgemagic-client.onrender.com'];
 if (process.env.CLIENT_ORIGIN) {
   allowedOrigins.push(new URL(process.env.CLIENT_ORIGIN).origin);
 }
